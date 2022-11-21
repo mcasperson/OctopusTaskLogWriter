@@ -9,3 +9,7 @@ solution.
 
 * `pip install -r requirements.txt`
 * `python main.py --octopusUrl https://yourinstance.octopus.app --octopusApiKey API-YOURKEYGOESHERE`
+
+# Example Subscription Configuration
+
+![](subscriptions.png)
