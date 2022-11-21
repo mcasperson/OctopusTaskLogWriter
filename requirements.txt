@@ -1,0 +1,2 @@
+bottle==0.12.23
+requests==2.28.1
