@@ -20,8 +20,6 @@ def build_headers():
 
 @post('/')
 def webhook():
-    print(request.json)
-
     deployment_id = extract_deployment_id(request.json)
     space_id = extract_space_id(request.json)
     task_id = get_task_id(space_id, deployment_id)
