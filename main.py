@@ -37,6 +37,14 @@ def webhook():
     elif runbookrun_id is not None:
         task_id = get_runbook_task_id(space_id, runbookrun_id)
 
+    write_log(task_id)
+
+
+def write_log(task_id):
+    """
+    Write the contents of the task log to a file
+    :param task_id: The task ID whose contents is written to a file
+    """
     if task_id is not None:
         task_log = get_task_log(space_id, task_id)
         with open(task_id + ".log", "w") as outfile:
@@ -50,7 +58,7 @@ def extract_deployment_id(message):
     :return: The deployment ID
     """
     deployment_ids = [a for a in message["Payload"]["Event"]["RelatedDocumentIds"] if
-                  a.startswith("Deployments-")]
+                      a.startswith("Deployments-")]
 
     if len(deployment_ids) == 1:
         return deployment_ids[0]
@@ -65,7 +73,7 @@ def extract_runbookrun_id(message):
     :return: The runbook run ID
     """
     runbookruns_ids = [a for a in message["Payload"]["Event"]["RelatedDocumentIds"] if
-                  a.startswith("RunbookRuns-")]
+                       a.startswith("RunbookRuns-")]
 
     if len(runbookruns_ids) == 1:
         return runbookruns_ids[0]
@@ -116,7 +124,7 @@ def get_task_log(space_id, task_id):
     :return: the task logs
     """
     return get(args.octopus_url + "/api/" + space_id + "/tasks/" + task_id + "/raw",
-                   headers=headers).text
+               headers=headers).text
 
 
 args = parse_args()
