@@ -10,6 +10,8 @@ def parse_args():
                         required=True)
     parser.add_argument('--octopusApiKey', dest='octopus_api_key', action='store', help='The Octopus API key',
                         required=True)
+    parser.add_argument('--port', dest='port', action='store', help='The port to listen on',
+                        required=True, default="8080")
 
     return parser.parse_args()
 
@@ -37,12 +39,13 @@ def webhook():
     elif runbookrun_id is not None:
         task_id = get_runbook_task_id(space_id, runbookrun_id)
 
-    write_log(task_id)
+    write_log(space_id, task_id)
 
 
-def write_log(task_id):
+def write_log(space_id, task_id):
     """
     Write the contents of the task log to a file
+    :param space_id The space ID
     :param task_id: The task ID whose contents is written to a file
     """
     if task_id is not None:
@@ -129,4 +132,4 @@ def get_task_log(space_id, task_id):
 
 args = parse_args()
 headers = build_headers()
-run(host='localhost', port=8080, debug=True)
+run(host='localhost', port=int(args.port), debug=True)
