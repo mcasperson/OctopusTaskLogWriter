@@ -62,7 +62,7 @@ def extract_runbookrun_id(message):
     """
     Extracts the runbook run ID from the Octopus Subscription message.
     :param message: The Subscription message
-    :return: The deployment ID
+    :return: The runbook run ID
     """
     runbookruns_ids = [a for a in message["Payload"]["Event"]["RelatedDocumentIds"] if
                   a.startswith("RunbookRuns-")]
@@ -100,7 +100,7 @@ def get_runbook_task_id(space_id, runbookrun_id):
     Get the task ID associated with the runbook run.
     :param space_id: The space ID
     :param runbookrun_id: The runbook run ID
-    :return: The task ID associated with the deployment ID
+    :return: The task ID associated with the runbook run ID
     """
     deployment_url = args.octopus_url + "/api/" + space_id + "/runbookruns/" + runbookrun_id
     response = get(deployment_url, headers=headers)
