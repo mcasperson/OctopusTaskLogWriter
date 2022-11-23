@@ -130,6 +130,34 @@ def get_task_log(space_id, task_id):
                headers=headers).text
 
 
+def get_task_log_the_hard_way(space_id, task_id):
+    """
+    Recreate the task logs from each individual log element.
+    :param space_id: The space ID
+    :param task_id: the task ID
+    :return: the task logs
+    """
+    task_log = get(args.octopus_url + "/api/" + space_id + "/tasks/" + task_id + "/details?verbose=true",
+                   headers=headers).json()
+
+    print(task_log)
+
+    log_text = ""
+
+    for activity_log in task_log["ActivityLogs"]:
+        for child in activity_log["Children"]:
+            for step in child["Children"]:
+                for log_element in step["LogElements"]:
+                    log_text += log_element["Category"] + " " \
+                                + log_element["OccurredAt"] + " " \
+                                + log_element["MessageText"] + "\n"
+
+    return log_text
+
+    # for activityLog in task_log["ActivityLogs"]:
+    #     print()
+
+
 args = parse_args()
 headers = build_headers()
 run(host='localhost', port=int(args.port), debug=True)
