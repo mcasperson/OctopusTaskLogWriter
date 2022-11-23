@@ -133,6 +133,11 @@ def get_task_log(space_id, task_id):
 def get_task_log_the_hard_way(space_id, task_id):
     """
     Recreate the task logs from each individual log element.
+    Note that all logs in Octopus are captured in a generic structure called ActivityElement:
+    https://github.com/OctopusDeploy/OctopusClients/blob/master/source/Octopus.Server.Client/Model/ActivityElement.cs
+    ActivityElement exposes a recursive parent/children structure that allows it to model any number of
+    hierarchies. For logging, we are interested in the hierarchy between steps, targets, and optionally nested
+    actions.
     :param space_id: The space ID
     :param task_id: the task ID
     :return: the task logs
