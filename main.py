@@ -166,9 +166,6 @@ def get_task_log_the_hard_way(space_id, task_id):
 
     return log_text
 
-    # for activityLog in task_log["ActivityLogs"]:
-    #     print()
-
 
 args = parse_args()
 headers = build_headers()
