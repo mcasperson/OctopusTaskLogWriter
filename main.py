@@ -11,7 +11,7 @@ def parse_args():
     parser.add_argument('--octopusApiKey', dest='octopus_api_key', action='store', help='The Octopus API key',
                         required=True)
     parser.add_argument('--port', dest='port', action='store', help='The port to listen on',
-                        required=True, default="8080")
+                        required=False, default="8080")
 
     return parser.parse_args()
 
@@ -49,7 +49,7 @@ def write_log(space_id, task_id):
     :param task_id: The task ID whose contents is written to a file
     """
     if task_id is not None:
-        task_log = get_task_log(space_id, task_id)
+        task_log = get_task_log_the_hard_way(space_id, task_id)
         with open(task_id + ".log", "w") as outfile:
             outfile.write(task_log)
 
@@ -145,12 +145,24 @@ def get_task_log_the_hard_way(space_id, task_id):
     log_text = ""
 
     for activity_log in task_log["ActivityLogs"]:
-        for child in activity_log["Children"]:
-            for step in child["Children"]:
-                for log_element in step["LogElements"]:
+        # Each child of an activity log represents a step
+        for step in activity_log["Children"]:
+            log_text += "Step Name: " + step["Name"] + "\n"
+            # Each child of a step represents a target
+            for target in step["Children"]:
+                log_text += "Target Name: " + target["Name"] + "\n"
+                # For a step without child actions, get the log elements at this level
+                for log_element in target["LogElements"]:
                     log_text += log_element["Category"] + " " \
                                 + log_element["OccurredAt"] + " " \
                                 + log_element["MessageText"] + "\n"
+                # For a step with child actions, dig one level deeper into the children
+                for action in target["Children"]:
+                    log_text += "Action Name: " + action["Name"] + "\n"
+                    for log_element in action["LogElements"]:
+                        log_text += log_element["Category"] + " " \
+                                    + log_element["OccurredAt"] + " " \
+                                    + log_element["MessageText"] + "\n"
 
     return log_text
 
